@@ -21,14 +21,36 @@ Example (PoC)
 ```js
 var Realm = require('ti.realm');
 
-var User = Realm.createObject({
-    value: ['firstName', 'lastName']
+// TODO: Change properties to something like `String` and write mapper-class
+var User = Realm.createObject('User', {
+    'firstName': 'NSString',
+    'lastName': 'NSString',
+    'age': 'NSNumber<RLMInt>'
 });
 
 Realm.addObject(User);
 
-var firstName = User.get('firstName');
-User.set('firstName', 'Hans');
+var win = Ti.UI.createWindow({
+    backgroundColor: '#fff'
+});
+
+var btn = Ti.UI.createButton({
+    title: 'Change name to Jon'
+});
+
+btn.addEventListener('click', function() {
+    User.setProperty('firstName', 'Jon');
+    User.setProperty('lastName', 'Doe');
+
+    //  This won't work so far, because we need to detect and cast the values
+    //  User.setProperty('age', 24);
+
+    alert('Changed name to: ' + User.getProperty('firstName') + ' ' + User.getProperty('lastName')); // + '(' + User.getProperty('age') + ')');
+});
+
+win.add(btn);
+win.open();
+
 
 ```
 
