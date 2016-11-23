@@ -10,7 +10,6 @@
 
 @interface TiRealmObject : RLMObject
 
-// TODO: This should be constructed using reflection
-@property NSString *firstName;
+// Properties are generated in our factory class
 
 @end
