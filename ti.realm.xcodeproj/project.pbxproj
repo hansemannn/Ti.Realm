@@ -30,6 +30,8 @@
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
 		DB37147F1DE49BDD00B910FF /* libc++.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DB37147E1DE49BDD00B910FF /* libc++.1.dylib */; };
 		DB3714811DE49BEA00B910FF /* libz.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DB3714801DE49BEA00B910FF /* libz.1.dylib */; };
+		DB3B57A51DE511C700A5E922 /* TiRealmObjectProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DB3B57A31DE511C700A5E922 /* TiRealmObjectProxy.h */; };
+		DB3B57A61DE511C700A5E922 /* TiRealmObjectProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DB3B57A41DE511C700A5E922 /* TiRealmObjectProxy.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		DBF2CB101DE49CBD001294FD /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DBF2CB0F1DE49CBD001294FD /* Realm.framework */; };
 		DBF2CB131DE49CF9001294FD /* TiRealmObject.h in Headers */ = {isa = PBXBuildFile; fileRef = DBF2CB111DE49CF9001294FD /* TiRealmObject.h */; };
 		DBF2CB141DE49CF9001294FD /* TiRealmObject.m in Sources */ = {isa = PBXBuildFile; fileRef = DBF2CB121DE49CF9001294FD /* TiRealmObject.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
@@ -56,6 +58,8 @@
 		D2AAC07E0554694100DB518D /* libti.realm.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libti.realm.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB37147E1DE49BDD00B910FF /* libc++.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.1.dylib"; path = "../../../../../../usr/lib/libc++.1.dylib"; sourceTree = "<group>"; };
 		DB3714801DE49BEA00B910FF /* libz.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.dylib; path = ../../../../../../usr/lib/libz.1.dylib; sourceTree = "<group>"; };
+		DB3B57A31DE511C700A5E922 /* TiRealmObjectProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiRealmObjectProxy.h; path = Classes/TiRealmObjectProxy.h; sourceTree = "<group>"; };
+		DB3B57A41DE511C700A5E922 /* TiRealmObjectProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiRealmObjectProxy.m; path = Classes/TiRealmObjectProxy.m; sourceTree = "<group>"; };
 		DBF2CB0F1DE49CBD001294FD /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = platform/Realm.framework; sourceTree = "<group>"; };
 		DBF2CB111DE49CF9001294FD /* TiRealmObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TiRealmObject.h; path = Classes/TiRealmObject.h; sourceTree = "<group>"; };
 		DBF2CB121DE49CF9001294FD /* TiRealmObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TiRealmObject.m; path = Classes/TiRealmObject.m; sourceTree = "<group>"; };
@@ -115,6 +119,8 @@
 				24DD6CF81134B3F500162E58 /* TiRealmModule.m */,
 				DBF2CB111DE49CF9001294FD /* TiRealmObject.h */,
 				DBF2CB121DE49CF9001294FD /* TiRealmObject.m */,
+				DB3B57A31DE511C700A5E922 /* TiRealmObjectProxy.h */,
+				DB3B57A41DE511C700A5E922 /* TiRealmObjectProxy.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -137,6 +143,7 @@
 			files = (
 				AA747D9F0F9514B9006C5449 /* TiRealm_Prefix.pch in Headers */,
 				24DD6CF91134B3F500162E58 /* TiRealmModule.h in Headers */,
+				DB3B57A51DE511C700A5E922 /* TiRealmObjectProxy.h in Headers */,
 				DBF2CB131DE49CF9001294FD /* TiRealmObject.h in Headers */,
 				24DE9E1111C5FE74003F90F6 /* TiRealmModuleAssets.h in Headers */,
 			);
@@ -214,6 +221,7 @@
 			files = (
 				24DD6CFA1134B3F500162E58 /* TiRealmModule.m in Sources */,
 				DBF2CB141DE49CF9001294FD /* TiRealmObject.m in Sources */,
+				DB3B57A61DE511C700A5E922 /* TiRealmObjectProxy.m in Sources */,
 				24DE9E1211C5FE74003F90F6 /* TiRealmModuleAssets.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -9,7 +9,7 @@
 #import "TiBase.h"
 #import "TiHost.h"
 #import "TiUtils.h"
-#import "TiRealmObject.h"
+#import "TiRealmObjectProxy.h"
 #import <Realm/Realm.h>
 
 @implementation TiRealmModule
@@ -33,6 +33,19 @@
 	[super startup];
 
 	NSLog(@"[DEBUG] %@ loaded",self);
+}
+
+- (TiRealmObjectProxy*)createObject:(id)args
+{
+    ENSURE_ARG_COUNT(args, 2);
+    
+    NSString *name;
+    NSDictionary *attributes;
+    
+    ENSURE_ARG_AT_INDEX(name, args, 0, NSString);
+    ENSURE_ARG_AT_INDEX(attributes, args, 1, NSDictionary);
+    
+    return [[TiRealmObjectProxy alloc] _initWithPageContext:[self pageContext] andName:name attributes:attributes];
 }
 
 #pragma Public APIs
@@ -61,16 +74,22 @@
     [[RLMRealm defaultRealm] setAutorefresh:[TiUtils boolValue:value def:YES]];
 }
 
+// TODO: For some reason, calling this method from the frontend will
+// result in deallocated `RLRealm` instances, causing a write error.
 - (void)beginWriteTransaction:(id)unused
 {
     [[RLMRealm defaultRealm] beginWriteTransaction];
 }
 
+// TODO: For some reason, calling this method from the frontend will
+// result in deallocated `RLRealm` instances, causing a write error.
 - (void)commitWriteTransaction:(id)unused
 {
     [[RLMRealm defaultRealm] commitWriteTransaction];
 }
 
+// TODO: For some reason, calling this method from the frontend will
+// result in deallocated `RLRealm` instances, causing a write error.
 - (void)canceltWriteTransaction:(id)unused
 {
     [[RLMRealm defaultRealm] cancelWriteTransaction];
@@ -78,9 +97,11 @@
 
 - (void)addObject:(id)value
 {
-    ENSURE_SINGLE_ARG(value, TiRealmObject);
+    ENSURE_SINGLE_ARG(value, TiRealmObjectProxy);
     
-    [[RLMRealm defaultRealm] addObject:[(TiRealmObject*)value object]];
+    [[RLMRealm defaultRealm] beginWriteTransaction];
+    [[RLMRealm defaultRealm] addObject:[(TiRealmObjectProxy*)value object]];
+    [[RLMRealm defaultRealm] commitWriteTransaction];
 }
 
 - (void)addObjects:(id)args
@@ -89,18 +110,22 @@
     NSMutableArray *objects = [NSMutableArray arrayWithArray:@[]];
     
     for (id object in args) {
-        ENSURE_TYPE(object, TiRealmObject);
-        [objects addObject:[(TiRealmObject*)object object]];
+        ENSURE_TYPE(object, TiRealmObjectProxy);
+        [objects addObject:[(TiRealmObjectProxy*)object object]];
     }
     
+    [[RLMRealm defaultRealm] beginWriteTransaction];
     [[RLMRealm defaultRealm] addObjects:objects];
+    [[RLMRealm defaultRealm] commitWriteTransaction];
 }
 
 - (void)addOrUpdateObject:(id)value
 {
-    ENSURE_SINGLE_ARG(value, TiRealmObject);
+    ENSURE_SINGLE_ARG(value, TiRealmObjectProxy);
     
-    [[RLMRealm defaultRealm] addOrUpdateObject:[(TiRealmObject*)value object]];
+    [[RLMRealm defaultRealm] beginWriteTransaction];
+    [[RLMRealm defaultRealm] addOrUpdateObject:[(TiRealmObjectProxy*)value object]];
+    [[RLMRealm defaultRealm] commitWriteTransaction];
 }
 
 - (void)addOrUpdateObjectFromArray:(id)args
@@ -109,18 +134,21 @@
     NSMutableArray *objects = [NSMutableArray arrayWithArray:@[]];
     
     for (id object in args) {
-        ENSURE_TYPE(object, TiRealmObject);
-        [objects addObject:[(TiRealmObject*)object object]];
+        ENSURE_TYPE(object, TiRealmObjectProxy);
+        [objects addObject:[(TiRealmObjectProxy*)object object]];
     }
     
+    [[RLMRealm defaultRealm] beginWriteTransaction];
     [[RLMRealm defaultRealm] addOrUpdateObjectsFromArray:objects];
 }
 
 - (void)deleteObject:(id)value
 {
-    ENSURE_SINGLE_ARG(value, TiRealmObject);
+    ENSURE_SINGLE_ARG(value, TiRealmObjectProxy);
     
-    [[RLMRealm defaultRealm] deleteObject:[(TiRealmObject*)value object]];
+    [[RLMRealm defaultRealm] beginWriteTransaction];
+    [[RLMRealm defaultRealm] deleteObject:[(TiRealmObjectProxy*)value object]];
+    [[RLMRealm defaultRealm] commitWriteTransaction];
 }
 
 - (void)deleteObjects:(id)args
@@ -129,16 +157,20 @@
     NSMutableArray *objects = [NSMutableArray arrayWithArray:@[]];
     
     for (id object in args) {
-        ENSURE_TYPE(object, TiRealmObject);
-        [objects addObject:[(TiRealmObject*)object object]];
+        ENSURE_TYPE(object, TiRealmObjectProxy);
+        [objects addObject:[(TiRealmObjectProxy*)object object]];
     }
     
+    [[RLMRealm defaultRealm] beginWriteTransaction];
     [[RLMRealm defaultRealm] deleteObjects:objects];
+    [[RLMRealm defaultRealm] commitWriteTransaction];
 }
 
 - (void)deleteAllObjects:(id)unused
 {
+    [[RLMRealm defaultRealm] beginWriteTransaction];
     [[RLMRealm defaultRealm] deleteAllObjects];
+    [[RLMRealm defaultRealm] commitWriteTransaction];
 }
 
 - (id)objectClasses

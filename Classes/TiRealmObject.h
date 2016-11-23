@@ -8,14 +8,9 @@
 #import "TiProxy.h"
 #import <Realm/Realm.h>
 
-@interface TiRealmObject : TiProxy {
-    RLMObject *object;
-}
+@interface TiRealmObject : RLMObject
 
-- (RLMObject*)object;
-
-- (id)isInvalidated:(id)unused;
-
-- (id)indexedProperties;
+// TODO: This should be constructed using reflection
+@property NSString *firstName;
 
 @end
