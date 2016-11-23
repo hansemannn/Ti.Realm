@@ -11,9 +11,9 @@ Requirements
   - iOS 8.0 or later
   - Xcode 8 or later
 
-Example (PoC)
+Building
 ---------------
-This module requires the static Framework `Realm.framework` to be downloaded in the `platform/` directory.
+This module requires the static Framework `Realm.framework` to be downloaded from [here](https://realm.io/docs/objc/latest/#prerequisites) to the `platform/` directory.
 
 Example (PoC)
 ---------------
