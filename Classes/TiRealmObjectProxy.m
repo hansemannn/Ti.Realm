@@ -14,10 +14,10 @@
 
 #pragma mark Internal APIs
 
-- (id)_initWithPageContext:(id<TiEvaluator>)context andName:(NSString*)name attributes:(NSDictionary*)attributes
-{
-    // TODO: Map types to Realm constants
-    
+- (id)_initWithPageContext:(id<TiEvaluator>)context
+                   andName:(NSString *)name
+                attributes:(NSDictionary *)attributes
+{    
     if (self = [super _initWithPageContext:context]) {
         [TiRealmObjectProxy manipulateClassWithAttributes:attributes];
         [self setObject:[[TiRealmObject alloc] init]];
@@ -28,15 +28,40 @@
     
 + (void)manipulateClassWithAttributes:(NSDictionary*)attributes
 {
-        for (NSString* key in attributes) {
-            objc_property_attribute_t type = { "T", [[NSString stringWithFormat:@"@\"%@\"",[attributes valueForKey:key]] UTF8String] };
-            objc_property_attribute_t backingivar  = { "V", "_privateName" };
-            objc_property_attribute_t attrs[] = { type, backingivar };
-            
-            class_addProperty([TiRealmObject class], [key UTF8String], attrs, 2);
-            class_addMethod([TiRealmObject class], NSSelectorFromString(key), (IMP)nameGetter, "@@:");
-            class_addMethod([TiRealmObject class], NSSelectorFromString([NSString stringWithFormat:@"%@:", key]), (IMP)nameSetter, "v@:@");
+    for (NSString* key in attributes) {
+        if ([key isEqualToString:@"requiredProperties"]) {
+            // TODO: Generate class method correctly
+            class_addMethod(objc_getMetaClass(class_getName([TiRealmObject class])), NSSelectorFromString(key), (IMP)nameGetter, "@:@");
         }
+        
+        objc_property_attribute_t type = { "T", [[NSString stringWithFormat:@"@\"%@\"", [TiRealmObjectProxy nativeClassNameFromIdentifier:[attributes valueForKey:key]]] UTF8String] };
+        objc_property_attribute_t backingivar  = { "V", "_privateName" };
+        objc_property_attribute_t attrs[] = { type, backingivar };
+        
+        class_addProperty([TiRealmObject class], [key UTF8String], attrs, 2);
+        class_addMethod([TiRealmObject class], NSSelectorFromString(key), (IMP)nameGetter, "@@:");
+        class_addMethod([TiRealmObject class], NSSelectorFromString([NSString stringWithFormat:@"%@:", key]), (IMP)nameSetter, "v@:@");
+    }
+}
+
++ (NSString *)nativeClassNameFromIdentifier:(NSString *)identifier
+{
+    if ([identifier isEqualToString:@"string"]) {
+        return @"NSString";
+    } else if ([identifier isEqualToString:@"int"]) {
+        return @"NSNumber<RLMInt>";
+    } else if ([identifier isEqualToString:@"bool"]) {
+        return @"NSNumber<RLMBool>";
+    } else if ([identifier isEqualToString:@"float"]) {
+        return @"NSNumber<RLMFloat>";
+    } else if ([identifier isEqualToString:@"double"]) {
+        return @"NSNumber<RLMDouble>";
+    } else if ([identifier isEqualToString:@"date"]) {
+        return @"NSDate";
+    } else {
+        NSLog(@"[ERROR] Unknown type identifier \"%@\" specified. Falling back to NSString.");
+        return @"NSString";
+    }
 }
 
 NSString *nameGetter(id self, SEL _cmd) {
@@ -52,6 +77,20 @@ void nameSetter(id self, SEL _cmd, NSString *newName) {
 
 #pragma mark Public APIs
 
+- (id)objects
+{
+    // TODO: Map native types
+    return [TiRealmObject allObjects];
+}
+
+- (id)objectsWhere:(id)value
+{
+    ENSURE_SINGLE_ARG(value, NSString);
+    
+    return [TiRealmObject objectsWhere:value];
+}
+
+// TODO: Remove these and use KVO to get and set
 - (id)getProperty:(id)value
 {
     ENSURE_SINGLE_ARG(value, NSString);
